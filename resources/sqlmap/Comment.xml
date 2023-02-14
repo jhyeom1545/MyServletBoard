@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="MyComment">
+	<!-- 댓글 생성 -->
+	<insert id="insert" parameterType="Comment">
+		<![CDATA[
+		INSERT INTO comments(
+			commentContent,
+			commentAuthor,
+			boardNum
+		) VALUES(
+			#{commentContent},
+			#{commentAuthor},
+			${boardNum}
+		);
+		]]>
+	</insert>
+	
+	<!-- 댓글 하나 조회 -->
+	<select id="selectOne" parameterType="String" resultType="Comment">
+		<![CDATA[
+			SELECT
+				commentNum,
+				commentContent,
+				commentDate,
+				commentAuthor
+			FROM comments
+			WHERE commentNum=#{commentNum} AND commentDelete IS NULL;
+				]]>
+	</select>
+	
+	
+	<!-- 게시글의 모든 댓글 조회 -->
+	<select id="selectAll" parameterType="String" resultType="Comment">
+		<![CDATA[
+		SELECT
+			commentNum,
+			commentContent,
+			commentDate,
+			commentAuthor
+		FROM comments
+		WHERE boardNum=#{boardNum} AND commentDelete IS NULL;
+			]]>
+	</select>
+	
+	<!-- 댓글 수정 -->
+	<update id="update" parameterType="Comment">
+		<![CDATA[
+		UPDATE comments SET
+			commentContent=#{commentContent},
+			commentUpdate=NOW()
+		WHERE commentNum=#{commentNum} AND commentAuthor=#{commentAuthor};
+			]]>
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="delete" parameterType="Comment">
+		<![CDATA[
+		UPDATE comments SET
+			commentDelete=NOW()
+		WHERE commentNum=#{commentNum} AND commentAuthor=#{commentAuthor};
+			]]>
+	</delete>
+</mapper>
